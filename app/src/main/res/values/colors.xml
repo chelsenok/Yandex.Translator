@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="tabSelectedIconColor">#000</color>
-    <color name="tabUnselectedIconColor">#91000000</color>
+    <color name="tabSelectedColor">#000</color>
+    <color name="tabUnselectedColor">#69000000</color>
     <color name="toolbarColor">#FFDC61</color>
 </resources>

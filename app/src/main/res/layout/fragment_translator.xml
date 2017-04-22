@@ -10,6 +10,7 @@
         android:gravity="center">
 
         <FrameLayout
+            android:onClick="onLanguageClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
@@ -23,16 +24,18 @@
                 android:gravity="right|center"
                 android:text="English"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
         </FrameLayout>
 
         <ImageButton
+            android:onClick="onSwapLanguageClick"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/ic_compare"/>
 
         <FrameLayout
+            android:onClick="onLanguageClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
@@ -46,7 +49,7 @@
                 android:gravity="left|center"
                 android:text="Russian"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
         </FrameLayout>
 
     </LinearLayout>

@@ -1,6 +1,5 @@
 package com.chelsenok.translator.activities;
 
-import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,35 +7,28 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.chelsenok.translator.R;
-import com.chelsenok.translator.adapters.MainPagerAdapter;
+import com.chelsenok.translator.adapters.pagers.MainPagerAdapter;
+import com.chelsenok.translator.utils.Language;
+import com.chelsenok.translator.utils.LanguageManager;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Context mContext;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContext = this;
 
+        final MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         final TabLayout mainTabLayout = getTabLayout(R.id.main_viewpager, R.id.main_tabs,
-                new MainPagerAdapter(getSupportFragmentManager()));
-        for (int i = 0; i < MainPagerAdapter.ICONS.length; i++) {
-            setTabColorFilter(mainTabLayout.getTabAt(i).setIcon(MainPagerAdapter.ICONS[i]),
-                    R.color.tabUnselectedIconColor);
+                mainPagerAdapter);
+        for (int i = 0; i < mainPagerAdapter.getCount(); i++) {
+            setTabColorFilter(mainTabLayout.getTabAt(i).setIcon(mainPagerAdapter.getContentAt(i)),
+                    R.color.tabUnselectedColor);
         }
-        setTabColorFilter(mainTabLayout.getTabAt(0), R.color.tabSelectedIconColor);
-
-//        final TabLayout bookmarkTabLayout = getTabLayout(R.id.bookmark_viewpager, R.id.bookmark_tabs,
-//                new BookmarkPagerAdapter(getSupportFragmentManager()));
-//        for (int i = 0; i < BookmarkPagerAdapter.NAMES.length; i++) {
-//            setTabColorFilter(bookmarkTabLayout.getTabAt(i),
-//                    R.color.tabUnselectedIconColor);
-//        }
-//        setTabColorFilter(bookmarkTabLayout.getTabAt(0), R.color.tabSelectedIconColor);
+        setTabColorFilter(mainTabLayout.getTabAt(0), R.color.tabSelectedColor).select();
     }
 
     private TabLayout getTabLayout(final int viewPagerId, final int tabLayoutId,
@@ -51,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTabSelected(final TabLayout.Tab tab) {
                         super.onTabSelected(tab);
-                        setTabColorFilter(tab, R.color.tabSelectedIconColor);
+                        setTabColorFilter(tab, R.color.tabSelectedColor);
                     }
 
                     @Override
                     public void onTabUnselected(final TabLayout.Tab tab) {
                         super.onTabUnselected(tab);
-                        setTabColorFilter(tab, R.color.tabUnselectedIconColor);
+                        setTabColorFilter(tab, R.color.tabUnselectedColor);
                     }
 
                     @Override
@@ -69,9 +61,16 @@ public class MainActivity extends AppCompatActivity {
         return tabLayout;
     }
 
-    private void setTabColorFilter(final TabLayout.Tab pTab, final int colorId) {
-        pTab.getIcon().setColorFilter(ContextCompat.getColor(mContext, colorId),
+    private TabLayout.Tab setTabColorFilter(final TabLayout.Tab tab, final int colorId) {
+        tab.getIcon().setColorFilter(ContextCompat.getColor(this, colorId),
                 PorterDuff.Mode.SRC_IN);
+        return tab;
+    }
+
+    public void onLanguageClick(View view) {
+    }
+
+    public void onSwapLanguageClick(View view) {
     }
 }
 
