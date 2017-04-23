@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:clickable="true"
-             android:paddingRight="12dp"
-             android:background="?selectableItemBackground"
-             android:layout_height="48dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="48dp"
+              android:background="?selectableItemBackground"
+              android:clickable="true"
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              android:paddingLeft="16dp"
+              android:paddingRight="12dp">
 
     <TextView
         android:id="@+id/tv"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="16dp"
         android:alpha="0.87"
         android:textColor="@android:color/black"
         android:textSize="18sp"/>
@@ -20,8 +23,7 @@
         android:id="@+id/content"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_gravity="right|center"
-        android:src="@drawable/ic_done"
+        app:srcCompat="@drawable/ic_done"
         android:visibility="invisible"/>
 
-</FrameLayout>
+</LinearLayout>

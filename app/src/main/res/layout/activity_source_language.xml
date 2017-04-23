@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
               android:orientation="vertical">
 
     <FrameLayout
@@ -15,7 +16,7 @@
             android:layout_margin="4dp"
             android:background="?selectableItemBackgroundBorderless"
             android:onClick="onBackClick"
-            android:src="@drawable/ic_arrow_back"/>
+            app:srcCompat="@drawable/ic_arrow_back"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,14 +52,25 @@
                 android:id="@+id/detect_language"
                 layout="@layout/item_language"/>
 
-            <TextView
-                android:text="@string/recently_used"
-                style="@style/items_descriptor"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_recently_used"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:background="@drawable/line_divider"/>
+
+            <LinearLayout
+                android:id="@+id/ll_recently_used"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:text="@string/recently_used"
+                    style="@style/items_descriptor"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_recently_used"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
             <TextView
                 android:text="@string/all_languages"

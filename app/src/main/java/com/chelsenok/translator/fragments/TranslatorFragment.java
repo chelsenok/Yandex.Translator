@@ -5,17 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.activities.SourceLanguageActivity;
-import com.chelsenok.translator.utils.Language;
-import com.chelsenok.translator.utils.LanguageManager;
+import com.chelsenok.translator.language.LanguageManager;
+import com.chelsenok.translator.language.LanguageTypes;
 
 public class TranslatorFragment extends Fragment {
 
@@ -25,6 +27,7 @@ public class TranslatorFragment extends Fragment {
     private View mView;
     private Context mContext;
     private EditText mEditText;
+    private ImageButton mClearButton;
 
     @Nullable
     @Override
@@ -33,46 +36,79 @@ public class TranslatorFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_translator, container, false);
         mContext = mView.getContext();
         mManager = LanguageManager.getInstance();
-        mTextNative = initializeLanguageText(R.id.tv_native, mManager.getNativeLanguage());
-        mTextForeign = initializeLanguageText(R.id.tv_foreign, mManager.getForeignLanguage());
+        mTextNative = LanguageTypes.Native.getTextView(mView);
+        mTextForeign = LanguageTypes.Foreign.getTextView(mView);
         initializeSwapButton();
-        setOnLanguageFrameClickListener(R.id.fl_native);
-        setOnLanguageFrameClickListener(R.id.fl_foreign);
-        mEditText = (EditText) mView.findViewById(R.id.edit_text);
-        mEditText.setSingleLine(true);
-//        mEditText.setOnFocusChangeListener((v, hasFocus) -> {
-//            final InputMethodManager imm = (InputMethodManager) mContext
-//                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-//            if (hasFocus) {
-//                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
-//                        InputMethodManager.HIDE_IMPLICIT_ONLY);
-//            } else {
-//
-//            }
-//        });
-//        mEditText.requestFocus();
+        setOnLanguageFrameClickListener(LanguageTypes.Native);
+        setOnLanguageFrameClickListener(LanguageTypes.Foreign);
+        mEditText = initializeEditText();
+        mClearButton = (ImageButton) mView.findViewById(R.id.btn_clear);
+        mClearButton.setOnClickListener(v -> mEditText.setText(""));
         return mView;
     }
 
-    private void setOnLanguageFrameClickListener(final int id) {
-        mView.findViewById(id).setOnClickListener(v -> mContext.startActivity(
-                new Intent(mContext, SourceLanguageActivity.class))
-        );
+    private EditText initializeEditText() {
+        final EditText editText = (EditText) mView.findViewById(R.id.edit_text);
+        editText.setOnFocusChangeListener((v, hasFocus) -> setEditTextEnabled(hasFocus));
+        editText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start,
+                                          final int count, final int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start,
+                                      final int count, final int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                if (s.toString().isEmpty()) {
+                    mClearButton.setVisibility(View.INVISIBLE);
+                } else {
+                    mClearButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        return editText;
+    }
+
+    private void setEditTextEnabled(final boolean b) {
+        final View view = mView.findViewById(R.id.border);
+        final int drawableId;
+        if (b) {
+            drawableId = R.drawable.border_active;
+        } else {
+            drawableId = R.drawable.border_passive;
+        }
+        view.setBackground(mContext.getResources().getDrawable(drawableId));
+
+    }
+
+    private void setOnLanguageFrameClickListener(final LanguageTypes type) {
+        final View view = type.getFrameLayout(mView);
+        view.setTag(type.getName());
+        view.setOnClickListener(v -> {
+            final Intent intent = new Intent(mContext, SourceLanguageActivity.class);
+            intent.putExtra(LanguageTypes.EXTRA, (String) v.getTag());
+            mContext.startActivity(intent);
+        });
     }
 
     private void initializeSwapButton() {
         final View view = mView.findViewById(R.id.btn_swap);
         view.setOnClickListener(v -> {
             mManager.swapLanguages();
-            final CharSequence swap = mTextNative.getText();
-            mTextNative.setText(mTextForeign.getText());
-            mTextForeign.setText(swap);
+            this.swapLanguages();
         });
     }
 
-    private TextView initializeLanguageText(final int id, final Language language) {
-        final TextView textView = (TextView) mView.findViewById(id);
-        textView.setText(language.fullName);
-        return textView;
+    private void swapLanguages() {
+        final CharSequence swap = mTextNative.getText();
+        mTextNative.setText(mTextForeign.getText());
+        mTextForeign.setText(swap);
     }
 }

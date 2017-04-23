@@ -36,7 +36,7 @@ public class BookmarksFragment extends Fragment {
         mButtonDelete = (ImageButton) view.findViewById(R.id.btn_delete);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.bookmark_viewpager);
         mManager = new SharedPreferenceManager(view.getContext(), TAB_LAYOUT);
-        viewPager.setAdapter(new BookmarkPagerAdapter(mFragmentManager));
+        viewPager.setAdapter(new BookmarkPagerAdapter(view.getContext(), mFragmentManager));
         mTabLayout = (TabLayout) view.findViewById(R.id.bookmark_tabs);
         mTabLayout.setupWithViewPager(viewPager);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

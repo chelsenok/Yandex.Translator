@@ -60,15 +60,17 @@
         android:layout_height="wrap_content">
 
         <View
+            android:id="@+id/border"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="124dp"
             android:layout_margin="8dp"
-            android:background="@drawable/border"/>
+            android:background="@drawable/border_passive"/>
 
         <EditText
             android:id="@+id/edit_text"
             android:layout_width="match_parent"
-            android:layout_height="104dp"
+            android:layout_height="80dp"
+            android:scrollHorizontally="false"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="56dp"
             android:layout_marginTop="16dp"
@@ -76,9 +78,36 @@
             android:gravity="top"
             android:hint="@string/type_text_or_a_site_address"
             android:imeOptions="actionDone"
-            android:inputType="textMultiLine"
             android:scrollbars="vertical"/>
 
+        <ImageButton
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="right"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:visibility="invisible"
+            android:id="@+id/btn_clear"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="56dp"
+            android:layout_gravity="right"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </FrameLayout>
 
 

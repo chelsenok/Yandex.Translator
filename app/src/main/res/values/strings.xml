@@ -5,4 +5,8 @@
     <string name="all_languages">ALL LANGUAGES</string>
     <string name="recently_used">RECENTLY USED</string>
     <string name="type_text_or_a_site_address">Type text</string>
+    <string name="detect_languages">Detect languages</string>
+    <string name="offline_translation">Offline translation</string>
+    <string name="history">History</string>
+    <string name="favorites">Favorites</string>
 </resources>

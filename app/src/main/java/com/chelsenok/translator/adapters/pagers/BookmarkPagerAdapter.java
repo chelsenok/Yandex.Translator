@@ -1,16 +1,18 @@
 package com.chelsenok.translator.adapters.pagers;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.chelsenok.translator.R;
 import com.chelsenok.translator.fragments.pagers.BookmarkPagerFragment;
 
 public class BookmarkPagerAdapter extends PagerAdapter {
 
-    public BookmarkPagerAdapter(final FragmentManager fm) {
+    public BookmarkPagerAdapter(final Context context, final FragmentManager fm) {
         super(fm, new String[]{
-                "History",
-                "Favorites"
+                context.getString(R.string.history),
+                context.getString(R.string.favorites)
         });
     }
 
