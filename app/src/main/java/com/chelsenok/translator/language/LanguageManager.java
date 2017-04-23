@@ -1,18 +1,15 @@
 package com.chelsenok.translator.language;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 
 import com.chelsenok.translator.utils.SharedPreferenceManager;
 import com.chelsenok.translator.utils.YandexApiManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 public final class LanguageManager {
@@ -87,22 +84,17 @@ public final class LanguageManager {
 
     public void setLanguage(final LanguageTypes type, final Language language) {
         type.setLanguage(language);
+        final SharedPreferenceManager manager = new SharedPreferenceManager(sContext, LANGUAGE);
+        manager.putString(type.getName(), type.getLanguage().shortName);
     }
 
     public void swapLanguages() {
         final Language foreign = LanguageTypes.Foreign.getLanguage();
-        LanguageTypes.Foreign.setLanguage(LanguageTypes.Native.getLanguage());
-        LanguageTypes.Native.setLanguage(foreign);
+        setLanguage(LanguageTypes.Foreign, LanguageTypes.Native.getLanguage());
+        setLanguage(LanguageTypes.Native, foreign);
     }
 
     public Language getLanguage(final LanguageTypes type) {
-        return getLanguage(type.getLanguage(), type.getDefaultShortName());
-    }
-
-    private Language getLanguage(final Language current, final String shortName) {
-        if (current != null) {
-            return current;
-        }
-        return getLanguageByShortName(shortName);
+        return type.getLanguage();
     }
 }

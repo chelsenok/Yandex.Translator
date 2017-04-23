@@ -17,6 +17,7 @@ import com.chelsenok.translator.database.TranslatorFabric;
 import com.chelsenok.translator.language.Language;
 import com.chelsenok.translator.language.LanguageManager;
 import com.chelsenok.translator.language.LanguageTypes;
+import com.chelsenok.translator.ui.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -42,8 +43,10 @@ public class SourceLanguageActivity extends AppCompatActivity {
         final LanguagesAdapter languagesAdapter = new LanguagesAdapter(this, mLanguages,
                 LanguageTypes.getTypeByName(mTypeName));
         rvAllLanguages.setAdapter(languagesAdapter);
-        rvAllLanguages.setLayoutManager(new LinearLayoutManager(this));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvAllLanguages.setLayoutManager(layoutManager);
 //        rvAllLanguages.setNestedScrollingEnabled(false);
+        rvAllLanguages.addItemDecoration(new DividerItemDecoration(this));
         return rvAllLanguages;
     }
 

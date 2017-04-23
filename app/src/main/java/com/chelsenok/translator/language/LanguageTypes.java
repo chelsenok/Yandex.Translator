@@ -1,6 +1,5 @@
 package com.chelsenok.translator.language;
 
-import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -26,7 +25,7 @@ public enum LanguageTypes {
         }
 
         @Override
-        public Language getLanguage() {
+        Language getLanguage() {
             return new Language(mLanguage.shortName, mLanguage.fullName);
         }
 
@@ -63,7 +62,7 @@ public enum LanguageTypes {
         }
 
         @Override
-        public Language getLanguage() {
+        Language getLanguage() {
             return new Language(mLanguage.shortName, mLanguage.fullName);
         }
 
@@ -88,7 +87,7 @@ public enum LanguageTypes {
 
     public abstract TextView getTextView(View viewParent);
 
-    public abstract Language getLanguage();
+    abstract Language getLanguage();
 
     abstract void setLanguage(Language language);
 

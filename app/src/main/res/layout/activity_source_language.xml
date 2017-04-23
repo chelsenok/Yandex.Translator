@@ -43,19 +43,13 @@
                 android:id="@+id/offline_translation"
                 layout="@layout/item_language"/>
 
-            <View
-                android:background="@drawable/line_divider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            <include layout="@layout/item_separator"/>
 
             <include
                 android:id="@+id/detect_language"
                 layout="@layout/item_language"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/line_divider"/>
+            <include layout="@layout/item_separator"/>
 
             <LinearLayout
                 android:id="@+id/ll_recently_used"
@@ -75,6 +69,8 @@
             <TextView
                 android:text="@string/all_languages"
                 style="@style/items_descriptor"/>
+
+            <include layout="@layout/item_separator"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_all_langs"
