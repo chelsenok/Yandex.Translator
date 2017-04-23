@@ -6,4 +6,5 @@
     <color name="tabSelectedColor">#000</color>
     <color name="tabUnselectedColor">#69000000</color>
     <color name="toolbarColor">#FFDC61</color>
+    <color name="dark_gray">#19000000</color>
 </resources>

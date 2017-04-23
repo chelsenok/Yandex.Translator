@@ -21,7 +21,7 @@
                 app:tabTextColor="@color/tabUnselectedColor"/>
 
             <ImageButton
-                android:scaleType="center"
+                android:id="@+id/btn_delete"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center|right"

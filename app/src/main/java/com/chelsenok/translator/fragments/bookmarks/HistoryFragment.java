@@ -1,4 +1,4 @@
-package com.chelsenok.translator.fragments;
+package com.chelsenok.translator.fragments.bookmarks;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 
 import com.chelsenok.translator.R;
 
-public class SettingsFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View view = inflater.inflate(R.layout.fragment_history, container, false);
         return view;
     }
 }

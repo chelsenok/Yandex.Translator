@@ -8,24 +8,24 @@ import com.chelsenok.translator.fragments.pagers.MainPagerFragment;
 
 public class MainPagerAdapter extends PagerAdapter {
 
-    private static FragmentManager sFragmentManager;
+    private final FragmentManager mFragmentManager;
 
-    public MainPagerAdapter(FragmentManager fm) {
+    public MainPagerAdapter(final FragmentManager fm) {
         super(fm, new Integer[]{
                 R.drawable.ic_one,
                 R.drawable.ic_two,
                 R.drawable.ic_three
         });
-        sFragmentManager = fm;
+        mFragmentManager = fm;
     }
 
     @Override
-    public Integer getContentAt(int i) {
+    public Integer getContentAt(final int i) {
         return (Integer) super.getContentAt(i);
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return MainPagerFragment.newInstance(position, sFragmentManager);
+    public Fragment getItem(final int position) {
+        return MainPagerFragment.newInstance(position, mFragmentManager);
     }
 }

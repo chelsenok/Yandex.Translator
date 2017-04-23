@@ -7,26 +7,26 @@ import com.chelsenok.translator.fragments.pagers.BookmarkPagerFragment;
 
 public class BookmarkPagerAdapter extends PagerAdapter {
 
-    public BookmarkPagerAdapter(FragmentManager fm) {
-        super(fm, new String[] {
+    public BookmarkPagerAdapter(final FragmentManager fm) {
+        super(fm, new String[]{
                 "History",
                 "Favorites"
         });
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(final int position) {
         return BookmarkPagerFragment.newInstance(position);
     }
 
     @Override
-    public CharSequence getPageTitle(int position) {
+    public CharSequence getPageTitle(final int position) {
         //can differ here
         return getContentAt(position);
     }
 
     @Override
-    public String getContentAt(int i) {
+    public String getContentAt(final int i) {
         return (String) super.getContentAt(i);
     }
 

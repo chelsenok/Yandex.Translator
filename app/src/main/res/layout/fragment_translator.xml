@@ -1,58 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
+              android:orientation="vertical"
               android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/toolbarColor"
-        android:gravity="center">
-
-        <FrameLayout
-            android:onClick="onLanguageClick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:alpha="0.87"
-                android:gravity="right|center"
-                android:text="English"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"/>
-        </FrameLayout>
+        android:background="@color/toolbarColor">
 
         <ImageButton
-            android:onClick="onSwapLanguageClick"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/btn_swap"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_compare"/>
+            app:srcCompat="@drawable/ic_compare"/>
 
         <FrameLayout
-            android:onClick="onLanguageClick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true">
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btn_swap"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:alpha="0.87"
-                android:gravity="left|center"
-                android:text="Russian"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"/>
+                android:id="@+id/tv_native"
+                style="@style/language_text"/>
+
+            <FrameLayout
+                android:id="@+id/fl_native"
+                android:clickable="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </FrameLayout>
 
-    </LinearLayout>
+        <FrameLayout
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btn_swap"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content">
+            <TextView
+                android:id="@+id/tv_foreign"
+                style="@style/language_text"/>
+
+            <FrameLayout
+                android:id="@+id/fl_foreign"
+                android:clickable="true"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/border"/>
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="56dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:gravity="top"
+            android:hint="@string/type_text_or_a_site_address"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"/>
+
+    </FrameLayout>
 
 
 </LinearLayout>

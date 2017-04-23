@@ -11,24 +11,35 @@ import android.view.View;
 
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.adapters.pagers.MainPagerAdapter;
-import com.chelsenok.translator.utils.Language;
 import com.chelsenok.translator.utils.LanguageManager;
+import com.chelsenok.translator.utils.SharedPreferenceManager;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String MAIN_TAB_LAYOUT = "main_tab_layout";
+    private final String SELECTED_TAB = "selected_tab";
+    private SharedPreferenceManager mManager;
+    private TabLayout mTabLayout;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        LanguageManager.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mManager = new SharedPreferenceManager(this, MAIN_TAB_LAYOUT);
         final MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        final TabLayout mainTabLayout = getTabLayout(R.id.main_viewpager, R.id.main_tabs,
+        mTabLayout = getTabLayout(R.id.main_viewpager, R.id.main_tabs,
                 mainPagerAdapter);
         for (int i = 0; i < mainPagerAdapter.getCount(); i++) {
-            setTabColorFilter(mainTabLayout.getTabAt(i).setIcon(mainPagerAdapter.getContentAt(i)),
+            setTabColorFilter(mTabLayout.getTabAt(i).setIcon(mainPagerAdapter.getContentAt(i)),
                     R.color.tabUnselectedColor);
         }
-        setTabColorFilter(mainTabLayout.getTabAt(0), R.color.tabSelectedColor).select();
+        setTabColorFilter(mTabLayout.getTabAt(mManager.getInt(SELECTED_TAB, 0)),
+                R.color.tabSelectedColor).select();
+        KeyboardVisibilityEvent.setEventListener(this,
+                isOpen -> mTabLayout.setVisibility(isOpen ? View.GONE : View.VISIBLE));
     }
 
     private TabLayout getTabLayout(final int viewPagerId, final int tabLayoutId,
@@ -44,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onTabSelected(final TabLayout.Tab tab) {
                         super.onTabSelected(tab);
                         setTabColorFilter(tab, R.color.tabSelectedColor);
+                        mManager.putInt(SELECTED_TAB, tab.getPosition());
                     }
 
                     @Override
@@ -65,12 +77,6 @@ public class MainActivity extends AppCompatActivity {
         tab.getIcon().setColorFilter(ContextCompat.getColor(this, colorId),
                 PorterDuff.Mode.SRC_IN);
         return tab;
-    }
-
-    public void onLanguageClick(View view) {
-    }
-
-    public void onSwapLanguageClick(View view) {
     }
 }
 

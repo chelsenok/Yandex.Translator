@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/toolbarColor">
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:onClick="onBackClick"
+            android:src="@drawable/ic_arrow_back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="56dp"
+            android:alpha="0.87"
+            android:gravity="center"
+            android:text="@string/source_language"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"/>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/offline_translation"
+                layout="@layout/item_language"/>
+
+            <View
+                android:background="@drawable/line_divider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <include
+                android:id="@+id/detect_language"
+                layout="@layout/item_language"/>
+
+            <TextView
+                android:text="@string/recently_used"
+                style="@style/items_descriptor"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_recently_used"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="@string/all_languages"
+                style="@style/items_descriptor"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_all_langs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
