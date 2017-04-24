@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.adapters.LanguagesAdapter;
-import com.chelsenok.translator.database.TranslatorFabric;
+import com.chelsenok.translator.database.DbFabric;
 import com.chelsenok.translator.language.Language;
 import com.chelsenok.translator.language.LanguageManager;
 import com.chelsenok.translator.language.LanguageTypes;
@@ -51,7 +51,7 @@ public class SourceLanguageActivity extends AppCompatActivity {
     }
 
     private void checkRecentlyUsedLanguages() {
-        if (TranslatorFabric.getInstance().getRecentlyUsedInstance().isEmpty()) {
+        if (DbFabric.getInstance().getRecentlyUsedDb().isEmpty()) {
             findViewById(R.id.ll_recently_used).setVisibility(View.GONE);
         }
     }

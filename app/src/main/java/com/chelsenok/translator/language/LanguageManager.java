@@ -3,7 +3,7 @@ package com.chelsenok.translator.language;
 import android.content.Context;
 
 import com.chelsenok.translator.utils.SharedPreferenceManager;
-import com.chelsenok.translator.utils.YandexApiManager;
+import com.chelsenok.translator.api.YandexApiManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
