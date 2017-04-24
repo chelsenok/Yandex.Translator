@@ -1,6 +1,6 @@
 package com.chelsenok.translator.api;
 
-import android.support.annotation.Nullable;
+import android.os.AsyncTask;
 
 import com.chelsenok.translator.asynctasks.RetrieveJsonTask;
 
@@ -18,6 +18,11 @@ import static com.chelsenok.translator.api.ResponseComponents.UI;
 
 public class YandexApiManager {
     private String mQueryUrl;
+    private static RetrieveJsonTask mJsonTask;
+
+    public static AsyncTask.Status getStatus() {
+        return mJsonTask.getStatus();
+    }
 
     public JSONObject getLangsJson(final String lang) {
         mQueryUrl = LANGS_PATH + KEY + UI + lang;
@@ -29,18 +34,21 @@ public class YandexApiManager {
         return getExecution();
     }
 
-    public JSONObject getTranslationJson(@Nullable final String nativeLang,
+    public JSONObject getTranslationJson(final String nativeLang,
                                          final String foreignLang, final String text) {
+        mQueryUrl = TRANSLATE_PATH + KEY + TEXT + text + LANG + nativeLang + "-" + foreignLang;
+        return getExecution();
+    }
+
+    public JSONObject getTranslationJson(final String foreignLang, final String text) {
         mQueryUrl = TRANSLATE_PATH + KEY + TEXT + text + LANG + foreignLang;
-        if (nativeLang != null) {
-            mQueryUrl += "-" + nativeLang;
-        }
         return getExecution();
     }
 
     private JSONObject getExecution() {
         try {
-            return new RetrieveJsonTask().execute(mQueryUrl).get();
+            mJsonTask = new RetrieveJsonTask();
+            return mJsonTask.execute(mQueryUrl).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;

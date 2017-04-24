@@ -9,4 +9,7 @@
     <string name="offline_translation">Offline translation</string>
     <string name="history">History</string>
     <string name="favorites">Favorites</string>
+    <string name="connection_error">Connection error</string>
+    <string name="unable_to_connect">Unable to connect to server. Please \ncheck your internet connection and\ntry again.</string>
+    <string name="retry">RETRY</string>
 </resources>

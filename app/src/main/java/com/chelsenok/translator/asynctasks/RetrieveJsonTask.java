@@ -28,7 +28,7 @@ public class RetrieveJsonTask extends AsyncTask<String, Void, JSONObject> {
         } finally {
             try {
                 is.close();
-            } catch (final IOException ignored) {
+            } catch (final Exception ignored) {
             }
             return json;
         }

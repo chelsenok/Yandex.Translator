@@ -2,8 +2,8 @@ package com.chelsenok.translator.language;
 
 import android.content.Context;
 
-import com.chelsenok.translator.utils.SharedPreferenceManager;
 import com.chelsenok.translator.api.YandexApiManager;
+import com.chelsenok.translator.utils.SharedPreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +15,7 @@ import java.util.Locale;
 public final class LanguageManager {
 
     private static LanguageManager ourInstance;
+    private boolean mDetectLanguagesEnabled;
 
     public static LanguageManager getInstance() {
         if (ourInstance == null) {
@@ -30,8 +31,8 @@ public final class LanguageManager {
     private static final String LANGUAGE = "language";
 
     private LanguageManager(final Context context) {
-        final JSONObject langsJson = new YandexApiManager().getLangsJson(Locale.getDefault().getLanguage());
         try {
+            final JSONObject langsJson = new YandexApiManager().getLangsJson(Locale.getDefault().getLanguage());
             initializeLanguageMap(langsJson.getJSONObject(LANGS_MAP));
             initializeCurrentPair(context);
             mSuccessed = true;
@@ -42,6 +43,24 @@ public final class LanguageManager {
 
     public ArrayList<Language> getAvailableLanguages() {
         return mLanguageMap;
+    }
+
+    public boolean allow(final Language language) {
+        for (final LanguageTypes type :
+                LanguageTypes.values()) {
+            if (language.equals(type.getLanguage())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void setDetectLanguagesEnabled(final boolean detectLanguagesEnabled) {
+        mDetectLanguagesEnabled = detectLanguagesEnabled;
+    }
+
+    public boolean getDetectLanguagesEnabled() {
+        return mDetectLanguagesEnabled;
     }
 
     private void initializeLanguageMap(final JSONObject langs) throws JSONException {
@@ -76,10 +95,15 @@ public final class LanguageManager {
         return null;
     }
 
-    public static boolean initialize(final Context context) {
-        sContext = context;
-        ourInstance = new LanguageManager(sContext);
+    public static boolean getSuccessed() {
         return mSuccessed;
+    }
+
+    public static void initialize(final Context context) {
+        if (!mSuccessed) {
+            sContext = context;
+            ourInstance = new LanguageManager(sContext);
+        }
     }
 
     public void setLanguage(final LanguageTypes type, final Language language) {

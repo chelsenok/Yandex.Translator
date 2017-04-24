@@ -1,6 +1,7 @@
 package com.chelsenok.translator.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -22,12 +23,14 @@ public class LanguagesAdapter extends RecyclerView.Adapter<LanguagesAdapter.View
     private static LanguageTypes sType;
     private static Context sContext;
     private static LanguagesAdapter.ViewHolder sCurrentVh;
+    private static Handler sHandler;
 
     public LanguagesAdapter(final Context context, final List<Language> languages,
-                            final LanguageTypes type) {
+                            final LanguageTypes type, final Handler activityNeedable) {
         mLanguages = languages;
         sType = type;
         sContext = context;
+        sHandler = activityNeedable;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -43,10 +46,14 @@ public class LanguagesAdapter extends RecyclerView.Adapter<LanguagesAdapter.View
             languageTextView = (TextView) itemView.findViewById(R.id.tv);
             acceptIcon = (ImageView) itemView.findViewById(R.id.content);
             this.itemView.setOnClickListener(v -> {
-                LanguageManager.getInstance().setLanguage(sType, language);
-                unSelectItem(sCurrentVh);
-                sCurrentVh = this;
-                selectItem();
+                final LanguageManager manager = LanguageManager.getInstance();
+                if (manager.allow(language)) {
+                    manager.setLanguage(sType, language);
+                    unSelectItem(sCurrentVh);
+                    sCurrentVh = this;
+                    selectItem();
+                    sHandler.obtainMessage(0).sendToTarget();
+                }
             });
         }
 

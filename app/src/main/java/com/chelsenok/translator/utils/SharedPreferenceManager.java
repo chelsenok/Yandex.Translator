@@ -26,6 +26,14 @@ public class SharedPreferenceManager {
         sPref.edit().putString(key, value).apply();
     }
 
+    public boolean getBoolean(final String key, final boolean defaultValue) {
+        return sPref.getBoolean(key, defaultValue);
+    }
+
+    public void putBoolean(final String key, final boolean value) {
+        sPref.edit().putBoolean(key, value).apply();
+    }
+
     public void putInt(final String key, final int value) {
         sPref.edit().putInt(key, value).apply();
     }

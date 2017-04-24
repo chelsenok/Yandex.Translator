@@ -1,24 +1,24 @@
 package com.chelsenok.translator.fragments.pagers;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chelsenok.translator.R;
-import com.chelsenok.translator.adapters.pagers.BookmarkPagerAdapter;
 import com.chelsenok.translator.fragments.BookmarksFragment;
 import com.chelsenok.translator.fragments.SettingsFragment;
 import com.chelsenok.translator.fragments.TranslatorFragment;
 
 public class MainPagerFragment extends PagerFragment {
     private static FragmentManager sFragmentManager;
+    private static Handler sHandler;
 
-    public static MainPagerFragment newInstance(final int page, final FragmentManager fragmentManager) {
+    public static MainPagerFragment newInstance(final int page, final FragmentManager fragmentManager,
+                                                final Handler handler) {
         sFragmentManager = fragmentManager;
+        sHandler = handler;
         final MainPagerFragment fragment = new MainPagerFragment();
         fragment.setArguments(getArguments(page));
         return fragment;
@@ -30,7 +30,7 @@ public class MainPagerFragment extends PagerFragment {
         final Bundle bundle = getArguments();
         switch (bundle.getInt(ARG_PAGE)) {
             case 0:
-                return new TranslatorFragment().onCreateView(inflater,
+                return new TranslatorFragment(sHandler).onCreateView(inflater,
                         container, savedInstanceState);
             case 1:
                 return new BookmarksFragment(sFragmentManager).onCreateView(inflater,

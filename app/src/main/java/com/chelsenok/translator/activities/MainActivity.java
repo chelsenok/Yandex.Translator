@@ -1,22 +1,22 @@
 package com.chelsenok.translator.activities;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.adapters.pagers.MainPagerAdapter;
-import com.chelsenok.translator.language.LanguageManager;
+import com.chelsenok.translator.utils.ActivityViewManager;
 import com.chelsenok.translator.utils.SharedPreferenceManager;
 
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Handler.Callback {
 
     private final String MAIN_TAB_LAYOUT = "main_tab_layout";
     private final String SELECTED_TAB = "selected_tab";
@@ -25,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        LanguageManager.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mManager = new SharedPreferenceManager(this, MAIN_TAB_LAYOUT);
-        final MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        ActivityViewManager.setTaskDescription(this);
+        final MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(
+                getSupportFragmentManager(), new Handler(this)
+        );
         mTabLayout = getTabLayout(R.id.main_viewpager, R.id.main_tabs,
                 mainPagerAdapter);
         for (int i = 0; i < mainPagerAdapter.getCount(); i++) {
@@ -38,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         }
         setTabColorFilter(mTabLayout.getTabAt(mManager.getInt(SELECTED_TAB, 0)),
                 R.color.tabSelectedColor).select();
-        KeyboardVisibilityEvent.setEventListener(this,
-                isOpen -> mTabLayout.setVisibility(isOpen ? View.GONE : View.VISIBLE));
     }
 
     private TabLayout getTabLayout(final int viewPagerId, final int tabLayoutId,
@@ -77,5 +77,15 @@ public class MainActivity extends AppCompatActivity {
         tab.getIcon().setColorFilter(ContextCompat.getColor(this, colorId),
                 PorterDuff.Mode.SRC_IN);
         return tab;
+    }
+
+    @Override
+    public boolean handleMessage(final Message msg) {
+        switch (msg.what) {
+            case 0:
+                startActivity((Intent) msg.obj);
+                finish();
+        }
+        return true;
     }
 }

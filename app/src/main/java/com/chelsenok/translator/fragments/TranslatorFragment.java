@@ -2,7 +2,9 @@ package com.chelsenok.translator.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -16,8 +18,12 @@ import android.widget.TextView;
 
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.activities.SourceLanguageActivity;
+import com.chelsenok.translator.api.YandexApiManager;
 import com.chelsenok.translator.language.LanguageManager;
 import com.chelsenok.translator.language.LanguageTypes;
+import com.chelsenok.translator.utils.SharedPreferenceManager;
+
+import org.json.JSONObject;
 
 public class TranslatorFragment extends Fragment {
 
@@ -28,6 +34,17 @@ public class TranslatorFragment extends Fragment {
     private Context mContext;
     private EditText mEditText;
     private ImageButton mClearButton;
+    private View mConnectionErrorView;
+    private View mTranslationView;
+    private TextView mTranslateText;
+    private final Handler mHandler;
+    private static final String TABLE = "translator";
+    private static final String EDIT_FIELD = "edit_field";
+    private SharedPreferenceManager mSharedManager;
+
+    public TranslatorFragment(final Handler handler) {
+        mHandler = handler;
+    }
 
     @Nullable
     @Override
@@ -36,15 +53,46 @@ public class TranslatorFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_translator, container, false);
         mContext = mView.getContext();
         mManager = LanguageManager.getInstance();
+        mEditText = initializeEditText();
+        mConnectionErrorView = mView.findViewById(R.id.ll_connection_error);
+        mTranslationView = mView.findViewById(R.id.fl_translation);
+        mTranslateText = (TextView) mTranslationView.findViewById(R.id.tv_translation);
+        LanguageManager.initialize(mContext);
+        if (LanguageManager.getSuccessed()) {
+            initializeLanguagesFields();
+        } else {
+            setErrorVisible();
+            mView.findViewById(R.id.btn_retry).setOnClickListener(v -> {
+                LanguageManager.initialize(mContext);
+                if (LanguageManager.getSuccessed()) {
+                    initializeLanguagesFields();
+                    mConnectionErrorView.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+        initializeSwapButton();
+        mClearButton = (ImageButton) mView.findViewById(R.id.btn_clear);
+        mClearButton.setOnClickListener(v -> {
+            mEditText.setText("");
+            mTranslateText.setText("");
+        });
+        mSharedManager = new SharedPreferenceManager(mContext, TABLE);
+        mEditText.setText(mSharedManager.getString(EDIT_FIELD, ""));
+        translateText(mEditText.getText().toString());
+        return mView;
+    }
+
+    public void setTranslationText(final CharSequence translationText) {
+        mConnectionErrorView.setVisibility(View.INVISIBLE);
+        mTranslationView.setVisibility(View.VISIBLE);
+        mTranslateText.setText(translationText);
+    }
+
+    private void initializeLanguagesFields() {
         mTextNative = LanguageTypes.Native.getTextView(mView);
         mTextForeign = LanguageTypes.Foreign.getTextView(mView);
-        initializeSwapButton();
         setOnLanguageFrameClickListener(LanguageTypes.Native);
         setOnLanguageFrameClickListener(LanguageTypes.Foreign);
-        mEditText = initializeEditText();
-        mClearButton = (ImageButton) mView.findViewById(R.id.btn_clear);
-        mClearButton.setOnClickListener(v -> mEditText.setText(""));
-        return mView;
     }
 
     private EditText initializeEditText() {
@@ -55,25 +103,65 @@ public class TranslatorFragment extends Fragment {
             @Override
             public void beforeTextChanged(final CharSequence s, final int start,
                                           final int count, final int after) {
-
             }
 
             @Override
             public void onTextChanged(final CharSequence s, final int start,
                                       final int count, final int after) {
-
             }
 
             @Override
             public void afterTextChanged(final Editable s) {
-                if (s.toString().isEmpty()) {
-                    mClearButton.setVisibility(View.INVISIBLE);
-                } else {
-                    mClearButton.setVisibility(View.VISIBLE);
-                }
+                final String string = s.toString();
+                translateText(string);
+                mSharedManager.putString(EDIT_FIELD, string);
             }
         });
         return editText;
+    }
+
+    private void translateText(final String s) {
+        if (!LanguageManager.getSuccessed()) {
+            setErrorVisible();
+            return;
+        }
+        if (s.isEmpty()) {
+            mClearButton.setVisibility(View.INVISIBLE);
+            return;
+        } else {
+            mClearButton.setVisibility(View.VISIBLE);
+        }
+        if (YandexApiManager.getStatus() != AsyncTask.Status.RUNNING) {
+            final LanguageManager manager = LanguageManager.getInstance();
+            final JSONObject translate;
+            final String sNative = s.replace(" ", "%20");
+            if (manager.getDetectLanguagesEnabled()) {
+                translate = new YandexApiManager().getTranslationJson(
+                        manager.getLanguage(LanguageTypes.Foreign).shortName,
+                        sNative
+                );
+            } else {
+                translate = new YandexApiManager().getTranslationJson(
+                        manager.getLanguage(LanguageTypes.Native).shortName,
+                        manager.getLanguage(LanguageTypes.Foreign).shortName,
+                        sNative
+                );
+            }
+            if (translate == null) {
+                setErrorVisible();
+                return;
+            }
+            try {
+                final String cleanTranslation = translate.getJSONArray("text").getString(0);
+                setTranslationText(cleanTranslation);
+            } catch (final Exception ignored) {
+            }
+        }
+    }
+
+    private void setErrorVisible() {
+        mTranslationView.setVisibility(View.INVISIBLE);
+        mConnectionErrorView.setVisibility(View.VISIBLE);
     }
 
     private void setEditTextEnabled(final boolean b) {
@@ -94,15 +182,17 @@ public class TranslatorFragment extends Fragment {
         view.setOnClickListener(v -> {
             final Intent intent = new Intent(mContext, SourceLanguageActivity.class);
             intent.putExtra(LanguageTypes.EXTRA, (String) v.getTag());
-            mContext.startActivity(intent);
+            mHandler.obtainMessage(0, intent).sendToTarget();
         });
     }
 
     private void initializeSwapButton() {
         final View view = mView.findViewById(R.id.btn_swap);
         view.setOnClickListener(v -> {
-            mManager.swapLanguages();
-            this.swapLanguages();
+            if (LanguageManager.getSuccessed()) {
+                mManager.swapLanguages();
+                this.swapLanguages();
+            }
         });
     }
 
@@ -110,5 +200,6 @@ public class TranslatorFragment extends Fragment {
         final CharSequence swap = mTextNative.getText();
         mTextNative.setText(mTextForeign.getText());
         mTextForeign.setText(swap);
+        translateText(mEditText.getText().toString());
     }
 }
