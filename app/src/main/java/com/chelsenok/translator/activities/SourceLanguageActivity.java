@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.adapters.LanguagesAdapter;
-import com.chelsenok.translator.database.DbFabric;
 import com.chelsenok.translator.language.Language;
 import com.chelsenok.translator.language.LanguageManager;
 import com.chelsenok.translator.language.LanguageTypes;
@@ -45,7 +44,6 @@ public class SourceLanguageActivity extends AppCompatActivity
         mEnabled = mPreferenceManager.getBoolean(SWITCH_ENABLED, false);
         initializeOfflineTranslation();
         initializeDetectLanguages();
-        initializeRecentlyUsedLanguages();
         initializeRvAllLanguages(LanguageManager.getInstance().getAvailableLanguages());
         final NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
         scrollView.smoothScrollTo(0, 0);
@@ -73,14 +71,6 @@ public class SourceLanguageActivity extends AppCompatActivity
                 finish();
         }
         return true;
-    }
-
-    private LinearLayout initializeRecentlyUsedLanguages() {
-        final LinearLayout layout = (LinearLayout) findViewById(R.id.ll_recently_used);
-        if (DbFabric.getInstance().getRecentlyUsedDb().isEmpty()) {
-            layout.setVisibility(View.GONE);
-        }
-        return layout;
     }
 
     private LinearLayout initializeDetectLanguages() {

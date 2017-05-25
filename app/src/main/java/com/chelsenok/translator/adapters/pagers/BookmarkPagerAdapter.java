@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.chelsenok.translator.R;
@@ -20,7 +21,16 @@ public class BookmarkPagerAdapter extends PagerAdapter {
 
     @Override
     public Fragment getItem(final int position) {
-        return BookmarkPagerFragment.newInstance(position);
+        final Fragment fragment = BookmarkPagerFragment.newInstance(position);
+        switch (position) {
+            case 0:
+                final View view = fragment.getView();
+
+                break;
+            case 1:
+                break;
+        }
+        return fragment;
     }
 
     @Override
@@ -36,10 +46,12 @@ public class BookmarkPagerAdapter extends PagerAdapter {
 
     @Override
     public void finishUpdate(final ViewGroup container) {
-        try{
+        try {
             super.finishUpdate(container);
-        } catch (final NullPointerException nullPointerException){
+        } catch (final NullPointerException nullPointerException) {
             Log.e("TAG", "Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
         }
     }
+
+
 }
