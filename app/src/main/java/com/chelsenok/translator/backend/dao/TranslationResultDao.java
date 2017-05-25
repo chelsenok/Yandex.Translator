@@ -1,4 +1,4 @@
-package com.chelsenok.translator.dao;
+package com.chelsenok.translator.backend.dao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
@@ -42,7 +42,7 @@ public class TranslationResultDao extends AbstractDao<TranslationResult, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TRANSLATION_RESULT\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"NATIVE_SENTENCE\" TEXT," + // 1: nativeSentence
                 "\"FOREIGN_SENTENCE\" TEXT," + // 2: foreignSentence
                 "\"NATIVE_SHORTCUT\" TEXT," + // 3: nativeShortcut

@@ -8,19 +8,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.chelsenok.translator.R;
-import com.chelsenok.translator.dao.TranslationResult;
-import com.chelsenok.translator.dao.TranslationResultDao;
+import com.chelsenok.translator.backend.TranslationResultObservable;
+import com.chelsenok.translator.backend.dao.TranslationResult;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapter.ViewHolder> {
+public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapter.ViewHolder>
+        implements Observer {
 
-    private final List<TranslationResult> mResults;
-    private final TranslationResultDao mDao;
+    private List<TranslationResult> mResults;
+    private final TranslationResultObservable mTranslationResultObservable;
 
-    public TranslationsAdapter(final TranslationResultDao dao) {
-        mDao = dao;
-        mResults = dao.loadAll();
+    public TranslationsAdapter(final TranslationResultObservable observable) {
+        mTranslationResultObservable = observable;
+        mResults = observable.getTranslationResultDao().loadAll();
+    }
+
+    @Override
+    public void update(final Observable o, final Object arg) {
+        mResults = mTranslationResultObservable.getTranslationResultDao().loadAll();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -30,13 +39,11 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
         private final TextView foreignSentTextView;
         private final TextView nativeShortcutTextView;
         private final TextView foreignShortcutTextView;
+        private final View mView;
 
         public ViewHolder(final View itemView) {
             super(itemView);
-            itemView.setOnLongClickListener(v -> {
-
-                return false;
-            });
+            mView = itemView;
             nativeSentTextView = (TextView) itemView.findViewById(R.id.tv_native_sent);
             nativeShortcutTextView = (TextView) itemView.findViewById(R.id.tv_native_shortcut);
             foreignSentTextView = (TextView) itemView.findViewById(R.id.tv_foreign_sent);
@@ -50,6 +57,10 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
             this.nativeShortcutTextView.setText(this.translationResult.getNativeShortcut());
             this.foreignShortcutTextView.setText(this.translationResult.getForeignShortcut());
         }
+
+        public void setListener(final View.OnLongClickListener listener) {
+            mView.setOnLongClickListener(listener);
+        }
     }
 
     @Override
@@ -58,6 +69,7 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
         final Context context = parent.getContext();
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View translationResultView = inflater.inflate(R.layout.item_translation_result, parent, false);
+        final TranslationsAdapter adapter = this;
         return new ViewHolder(translationResultView);
     }
 
@@ -65,6 +77,12 @@ public class TranslationsAdapter extends RecyclerView.Adapter<TranslationsAdapte
     public void onBindViewHolder(final TranslationsAdapter.ViewHolder viewHolder, final int position) {
         final TranslationResult translationResult = mResults.get(position);
         viewHolder.setTranslationResult(translationResult);
+        viewHolder.setListener(v -> {
+            mResults.remove(translationResult);
+            mTranslationResultObservable.getTranslationResultDao().delete(translationResult);
+            notifyDataSetChanged();
+            return false;
+        });
     }
 
     @Override

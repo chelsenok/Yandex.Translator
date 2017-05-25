@@ -1,4 +1,4 @@
-package com.chelsenok.translator.dao;
+package com.chelsenok.translator.backend.dao;
 
 import org.greenrobot.greendao.annotation.*;
 
@@ -13,7 +13,7 @@ import org.greenrobot.greendao.annotation.*;
 @Entity
 public class TranslationResult {
 
-    @Id
+    @Id(autoincrement = true)
     private Long id;
     private String nativeSentence;
     private String foreignSentence;

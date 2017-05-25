@@ -1,4 +1,4 @@
-package com.chelsenok.translator.dao;
+package com.chelsenok.translator.backend.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

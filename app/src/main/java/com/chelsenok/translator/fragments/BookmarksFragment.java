@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.chelsenok.translator.DaoApplication;
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.adapters.pagers.BookmarkPagerAdapter;
 import com.chelsenok.translator.utils.SharedPreferenceManager;
@@ -34,6 +35,10 @@ public class BookmarksFragment extends Fragment {
                              @Nullable final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         mButtonDelete = (ImageButton) view.findViewById(R.id.btn_delete);
+        mButtonDelete.setOnClickListener(v -> {
+            DaoApplication.getHistoryObservable().getTranslationResultDao().deleteAll();
+            DaoApplication.getHistoryObservable().notifyObservers();
+        });
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.bookmark_viewpager);
         mManager = new SharedPreferenceManager(view.getContext(), TAB_LAYOUT);
         viewPager.setAdapter(new BookmarkPagerAdapter(view.getContext(), mFragmentManager));

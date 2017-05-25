@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.chelsenok.translator.DaoApplication;
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.adapters.TranslationsAdapter;
-import com.chelsenok.translator.dao.TranslationResultDao;
+import com.chelsenok.translator.backend.TranslationResultObservable;
 import com.chelsenok.translator.ui.DividerItemDecoration;
 
 public class HistoryFragment extends Fragment {
@@ -26,12 +26,13 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_history, container, false);
-        mAdapter = getAdapter(DaoApplication.getHistoryDao());
+        mAdapter = getAdapter(DaoApplication.getHistoryObservable());
+        DaoApplication.getHistoryObservable().addObserver(mAdapter);
         mRecyclerView = getRecyclerView(container.getContext(), view, mAdapter);
         return view;
     }
 
-    public TranslationsAdapter getAdapter(final TranslationResultDao dao) {
+    public TranslationsAdapter getAdapter(final TranslationResultObservable dao) {
         final TranslationsAdapter adapter = new TranslationsAdapter(dao);
         return adapter;
     }

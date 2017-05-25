@@ -16,9 +16,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.chelsenok.translator.DaoApplication;
 import com.chelsenok.translator.R;
 import com.chelsenok.translator.activities.SourceLanguageActivity;
 import com.chelsenok.translator.api.YandexApiManager;
+import com.chelsenok.translator.backend.TranslationResultObservable;
+import com.chelsenok.translator.backend.dao.TranslationResult;
 import com.chelsenok.translator.language.LanguageManager;
 import com.chelsenok.translator.language.LanguageTypes;
 import com.chelsenok.translator.utils.SharedPreferenceManager;
@@ -33,6 +36,7 @@ public class TranslatorFragment extends Fragment {
     private View mView;
     private Context mContext;
     private EditText mEditText;
+    private ImageButton mBookmarkImageButton;
     private ImageButton mClearButton;
     private View mConnectionErrorView;
     private View mTranslationView;
@@ -56,6 +60,21 @@ public class TranslatorFragment extends Fragment {
         mEditText = initializeEditText();
         mConnectionErrorView = mView.findViewById(R.id.ll_connection_error);
         mTranslationView = mView.findViewById(R.id.fl_translation);
+        mBookmarkImageButton = (ImageButton) mView.findViewById(R.id.btn_bookmark);
+        mBookmarkImageButton.setOnClickListener(v -> {
+            if (!"".equals(mEditText.getText().toString()) && !"".equals(mTranslateText.getText().toString())) {
+                DaoApplication.getFavoriteObservable().getTranslationResultDao().insert(
+                        new TranslationResult(
+                                null,
+                                mEditText.getText().toString(),
+                                mTranslateText.getText().toString(),
+                                mManager.getLanguage(LanguageTypes.Native).shortName,
+                                mManager.getLanguage(LanguageTypes.Foreign).shortName
+                        )
+                );
+                DaoApplication.getFavoriteObservable().notifyObservers();
+            }
+        });
         mTranslateText = (TextView) mTranslationView.findViewById(R.id.tv_translation);
         LanguageManager.initialize(mContext);
         if (LanguageManager.getSuccessed()) {
@@ -73,6 +92,18 @@ public class TranslatorFragment extends Fragment {
         initializeSwapButton();
         mClearButton = (ImageButton) mView.findViewById(R.id.btn_clear);
         mClearButton.setOnClickListener(v -> {
+            if (!"".equals(mEditText.getText().toString()) && !"".equals(mTranslateText.getText().toString())) {
+                final TranslationResultObservable observable = DaoApplication.getHistoryObservable();
+                final TranslationResult result = new TranslationResult(
+                        null,
+                        mEditText.getText().toString(),
+                        mTranslateText.getText().toString(),
+                        mManager.getLanguage(LanguageTypes.Native).shortName,
+                        mManager.getLanguage(LanguageTypes.Foreign).shortName
+                );
+                observable.getTranslationResultDao().insert(result);
+                observable.notifyObservers();
+            }
             mEditText.setText("");
             mTranslateText.setText("");
         });

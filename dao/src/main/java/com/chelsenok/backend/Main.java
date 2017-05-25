@@ -7,7 +7,7 @@ import org.greenrobot.greendao.generator.Schema;
 public final class Main {
 
     public static void main(final String... args) throws Exception {
-        final Schema schema = new Schema(1, "com.chelsenok.translator.dao");
+        final Schema schema = new Schema(1, "com.chelsenok.translator.backend.dao");
         schema.enableKeepSectionsByDefault();
         createDatabase(schema);
         final DaoGenerator generator = new DaoGenerator();
@@ -16,7 +16,7 @@ public final class Main {
 
     private static void createDatabase(final Schema schema) {
         final Entity request = schema.addEntity("TranslationResult");
-        request.addIdProperty();
+        request.addIdProperty().autoincrement().primaryKey();
         request.addStringProperty("nativeSentence");
         request.addStringProperty("foreignSentence");
         request.addStringProperty("nativeShortcut");
